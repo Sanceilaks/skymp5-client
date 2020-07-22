@@ -5,6 +5,7 @@ import * as sp from "skyrimPlatform";
 import { applyMovement, NiPoint3 } from './components/movement';
 import { applyAnimation } from './components/animation';
 import { Look, applyLook, applyTints } from './components/look';
+import { Value } from './components/value';
 
 export interface View<T> {
     update(model: T);
@@ -168,6 +169,16 @@ export class FormView implements View<FormModel> {
                 }
             }
         }
+
+        if(model.values){
+            if(model.values.length != this.values.length){
+                this.values = new Array<Value>(model.values.length);
+            }            
+            
+            model.values.forEach((value,i)=>{
+                this.values[i] = value;
+            });
+        }
     }
 
     private getLookBasedBase(): number {
@@ -186,6 +197,7 @@ export class FormView implements View<FormModel> {
     private look?: Look;
     private isOnScreen = false;
     private lastPcWorldOrCell = 0;
+    private values: Array<Value>;
 }
 
 export class WorldView implements View<WorldModel> {

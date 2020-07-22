@@ -12,6 +12,7 @@ import * as networking from './networking';
 import * as sp from 'skyrimPlatform';
 import * as loadGameManager from './loadGameManager';
 import { WorldModel, FormModel } from './model';
+import { Value , getPlayerValues, getValue} from './components/value';
 
 let handleMessage = (msgAny: any, handler: MsgHandler) => {
     let msgType = msgAny.type || MsgType[msgAny.t];
@@ -118,6 +119,15 @@ export class SkympClient {
         }
     }
 
+    private sendValues() { 
+            let newPlayerValues = getPlayerValues();
+            newPlayerValues.forEach((val,i) => {
+                if(this.playerValues[i].getValue() !== val.getValue()){
+                    this.sendTarget.send({ t: MsgType.UpdateValue, data: getValue(val.getName()) }, false);
+                }
+            });
+    }
+
     private sendInputs() {
         this.sendMovement();
         this.sendAnimation();
@@ -164,6 +174,7 @@ export class SkympClient {
         });
     }
 
+    private playerValues:Array<Value>;
     private playerAnimSource?: AnimationSource;
     private lastSendMovementMoment = 0;
     private lastAnimationSent?: Animation;

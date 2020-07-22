@@ -1,12 +1,14 @@
 import { Movement, Transform } from './components/movement';
 import { Look } from './components/look';
 import { Animation } from './components/animation';
+import { Value } from './components/value';
 
 export enum MsgType {
     CustomPacket = 1,
     UpdateMovement = 2,
     UpdateAnimation = 3,
-    UpdateLook = 4
+    UpdateLook = 4,
+    UpdateValue = 5
 };
 
 export interface CreateActorMessage {
@@ -15,6 +17,7 @@ export interface CreateActorMessage {
     transform: Transform;
     isMe: boolean;
     look: Look;
+    values:Array<Value>;
 }
 
 export interface DestroyActorMessage {
@@ -43,4 +46,10 @@ export interface UpdateLookMessage {
 export interface SetRaceMenuOpenMessage {
     type: 'setRaceMenuOpen';
     open: boolean;
+}
+
+export interface UpdateValuesMessage {
+    t: MsgType.UpdateValue;
+    idx: number;
+    data: Value;
 }
