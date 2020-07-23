@@ -5,7 +5,7 @@ import * as sp from "skyrimPlatform";
 import { applyMovement, NiPoint3 } from './components/movement';
 import { applyAnimation } from './components/animation';
 import { Look, applyLook, applyTints } from './components/look';
-import { Value } from './components/value';
+import { ActorValues, isAValueEqual, calculateValue } from './components/actorValues';
 
 export interface View<T> {
     update(model: T);
@@ -170,14 +170,22 @@ export class FormView implements View<FormModel> {
             }
         }
 
-        if(model.values){
-            if(model.values.length != this.values.length){
-                this.values = new Array<Value>(model.values.length);
-            }            
-            
-            model.values.forEach((value,i)=>{
-                this.values[i] = value;
-            });
+        if(model.actorValues){
+
+            let actor = Actor.from(refr);
+
+            if(!isAValueEqual(model.actorValues.health, this.actorValues.health)){
+                this.actorValues.health = model.actorValues.health;
+                actor.setActorValue(this.actorValues.health.name, calculateValue(this.actorValues.health));
+            }
+            if(!isAValueEqual(model.actorValues.stamina, this.actorValues.stamina)){
+                this.actorValues.stamina = model.actorValues.stamina;
+                actor.setActorValue(this.actorValues.stamina.name, calculateValue(this.actorValues.stamina));
+            }   
+            if(!isAValueEqual(model.actorValues.magicka, this.actorValues.magicka)){
+                this.actorValues.magicka = model.actorValues.magicka;
+                actor.setActorValue(this.actorValues.magicka.name, calculateValue(this.actorValues.magicka));
+            }         
         }
     }
 
@@ -197,7 +205,7 @@ export class FormView implements View<FormModel> {
     private look?: Look;
     private isOnScreen = false;
     private lastPcWorldOrCell = 0;
-    private values: Array<Value>;
+    private actorValues:ActorValues;
 }
 
 export class WorldView implements View<WorldModel> {

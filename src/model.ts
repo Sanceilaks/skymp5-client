@@ -1,7 +1,7 @@
 import { Movement } from './components/movement';
 import { Animation } from './components/animation';
 import { Look } from './components/look';
-import { Value } from './components/value';
+import { ActorValues } from './components/actorValues';
 
 export interface FormModel {
     baseId?: number;
@@ -9,7 +9,7 @@ export interface FormModel {
     animation?: Animation;
     numMovementChanges?: number;
     look?: Look;
-    values?: Array<Value>;
+    actorValues?: ActorValues;
 }
 
 export interface WorldModel {
