@@ -32,7 +32,6 @@ let isAnyTorchEquipped = (actor: Actor) => {
 }
 
 let isEquipped = (actor: Actor, f: Form) => {
-    //printConsole('isEquipped', f.getType());
     if (f.getType() === FormType.kLight) {
         return isAnyTorchEquipped(actor);
     }
@@ -40,7 +39,6 @@ let isEquipped = (actor: Actor, f: Form) => {
 }
 
 let unequipItem = (actor: Actor, f: Form) => {
-    //printConsole('unequipItem', f.getType());
     if (f.getType() === FormType.kLight) {
         if (isBadMenuShown()) return;
     }
@@ -110,7 +108,8 @@ export let applyEquipment = (actor: Actor, equipment: Equipment) => {
 
     if (equipment.rightHandWeapon === 0){
         let rWeap = getEquippedWeaponId(actor, false);
-        if(rWeap !== 0) {
+
+        if(rWeap !== 0 && rWeap !== 500) { 
             actor.unequipItem(Game.getFormEx(rWeap), true,true);
         }
     }
@@ -122,9 +121,23 @@ export let applyEquipment = (actor: Actor, equipment: Equipment) => {
         }
     }
 
-    /*if (false) {
-            let idForLeft = cloneWeapoForLeftHand(equipment.leftHandWeapon);
-            printConsole(`idForLeft  = ${idForLeft}`);
-           actor.equipItem(Game.getFormEx(idForLeft), true, true);
-    }*/
+    if (typeof equipment.leftHandWeapon === 'number' && equipment.leftHandWeapon) {
+        let id = cloneWeapoForLeftHand(equipment.leftHandWeapon);
+        let left = Game.getFormEx(id);
+       if (left && !isBadMenuShown() &&  left.getFormID() !== getEquippedWeaponId(actor, true)) {
+            
+        let empty = Game.getFormEx(500);
+        printConsole(`${empty.getType()}`);
+        equipItem(actor, empty);
+
+        let z;
+        let numSteps = 100000; // Crash !!!!
+        //let numSteps = 1000000; // No Crash !!!!
+        for(let i = 0; i < numSteps ;++i)
+            z = 0;
+
+        equipItem(actor, left);     
+        printConsole("Done!"); 
+       }
+    }
 };
